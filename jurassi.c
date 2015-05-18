@@ -8,9 +8,9 @@
 
 static int read_audio(char **wav, char *filename, char *boundary) {
 	int rc = 0, boundaries = 0, i = 0, l = 0;
-	char *exec = NULL;
+	char *exec = NULL, *cmd_str = NULL, *cmd_which = NULL;
 	size_t file_size = 0, boundary_offset = 0, boundary_size = 0, wav_size = 0;
-	FILE *file = NULL;
+	FILE *file = NULL, *cmd = NULL;
 
 	if (!filename || strlen(filename) == 0) {
 		printf("No filename provided\n");
@@ -19,14 +19,26 @@ static int read_audio(char **wav, char *filename, char *boundary) {
 		goto cleanup;
 	}
 
-	file = fopen(filename, "rb");
+	if (strncmp(filename, ".", 1) != 0 && strncmp(filename, "/", 1) != 0) {
+		cmd_str = malloc(sizeof(char) * (7 + strlen(filename)));
+		strcpy(cmd_str, "which ");
+		strcat(cmd_str, filename);
 
-	if (!file) {
-		printf("Could not open %s\n", filename);
+		cmd = popen(cmd_str, "r");
+		cmd_which = malloc(sizeof(char) * 100);
+		(void)fread(cmd_which, 1, 100, cmd);
 
-		rc = 1;
-		goto cleanup;
+		for (i = (int)strlen(cmd_which), l = 0; i >= l; i--) {
+			if (cmd_which[i] == '\n') {
+				cmd_which[i] = '\0';
+				break;
+			}
+		}
+
+		filename = cmd_which;
 	}
+
+	file = fopen(filename, "rb");
 
 	(void)fseek(file, 0, SEEK_END);
 	file_size = (size_t)ftell(file);
@@ -75,6 +87,18 @@ static int read_audio(char **wav, char *filename, char *boundary) {
 cleanup:
 	if (file) {
 		(void)fclose(file);
+	}
+
+	if (cmd) {
+		(void)pclose(cmd);
+	}
+
+	if (cmd_str) {
+		free(cmd_str);
+	}
+
+	if (cmd_which) {
+		free(cmd_which);
 	}
 
 	return rc;
@@ -166,6 +190,8 @@ int main(int argc, char *argv[]) {
 	int tries = 0, repeat = 1;
 	size_t length = 0;
 	char *line = NULL, *wav = NULL;
+
+	(void)read_audio(&wav, argv[0], "magic.wav");
 
 	(void)system("clear");
 
