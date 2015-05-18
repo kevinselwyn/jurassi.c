@@ -191,8 +191,6 @@ int main(int argc, char *argv[]) {
 	size_t length = 0;
 	char *line = NULL, *wav = NULL;
 
-	(void)read_audio(&wav, argv[0], "magic.wav");
-
 	(void)system("clear");
 
 	printf("%s\n", TITLE);
