@@ -1,8 +1,8 @@
-#jurassi.c
+# jurassi.c
 
 Jurassic Park System Security Interface running on Dennis Nedry's computer
 
-##Installation
+## Installation
 
 ```bash
 make && sudo make install
@@ -10,7 +10,7 @@ make && sudo make install
 
 This interface depends on [libao](https://www.xiph.org/ao/).
 
-##Usage
+## Usage
 
 ```bash
 jurassic
@@ -24,8 +24,8 @@ access security grid
 access main security grid
 ```
 
-##Acknowledgements
+## Acknowledgements
 
-All due credit to Universal, Steven Spielberg, Michael Crichton, and [Phil Tippett](http://i.imgur.com/xWWv7Yt.png).
+All due credit to Universal, Steven Spielberg, Michael Crichton, and [Phil Tippett](phil-tippett.png).
 
 Apologies to Ray Arnold. I know he hates this hacker crap.
